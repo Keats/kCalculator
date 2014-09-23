@@ -2,14 +2,18 @@
 
 
 /* @ngInject */
-function appConfig($urlRouterProvider: ng.ui.IUrlRouterProvider) {
-  $urlRouterProvider.otherwise("/home");
+function appConfig(
+  $urlRouterProvider: ng.ui.IUrlRouterProvider,
+  $locationProvider: ng.ILocationProvider
+) {
+  $urlRouterProvider.otherwise("/");
+  $locationProvider.html5Mode(true);
 }
 
 angular
-  .module("ngBoilerplate", [
+  .module("kcalc", [
     "templates",
-    "ngBoilerplate.home",
+    "kcalc.calc",
     "ui.router.state"
   ])
   .config(appConfig);

@@ -8,4 +8,4 @@
 // API TYPES
 
 // APP TYPES
-/// <reference path="app/core.ts"/>
+/// <reference path="app/calc.ts"/>

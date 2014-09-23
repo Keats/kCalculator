@@ -1,0 +1,29 @@
+<form>
+    <!-- This HTML is horrible, sorry -->
+    I am a
+    <select required ng-model="vm.infoData.activityMultiplier">
+        <option value="1.2">Sedentary</option>
+        <option value="1.375">Lightly active</option>
+        <option value="1.55">Moderately active</option>
+        <option value="1.725">Very active</option>
+        <option value="1.9">Extra active</option>
+    </select>
+    <input required min="0" max="150" type="number" ng-model="vm.infoData.age" /> years old
+    <select required ng-model="vm.infoData.gender">
+        <option value="male">man</option>
+        <option value="female">woman</option>
+    </select>
+    , I weight <input required min="0" max="1000" type="number" ng-model="vm.infoData.weight"/>
+    <select required ng-model="vm.infoData.useImperial">
+        <option value="false">kg</option>
+        <option value="true">lbs</option>
+    </select>
+    and am
+    <div ng-if="vm.infoData.useImperial == 'false' || !vm.infoData.useImperial">
+        <input required min="0" max="300" type="number" ng-model="vm.infoData.height"/>cm tall.
+    </div>
+    <div ng-if="vm.infoData.useImperial == 'true' || vm.infoData.useImperial === true">
+        <input required type="text" ng-model="vm.infoData.height" ng-pattern="vm.imperialHeightPattern"/> tall.
+    </div>
+    <!-- End of terrible HTML -->
+</form>

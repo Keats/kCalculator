@@ -1,7 +1,7 @@
 /// <reference path="../../types/types.ts"/>
 
 angular
-  .module("ngBoilerplate")
+  .module("kcalc")
   .config(exceptionDecorator);
 
 /* @ngInject */
