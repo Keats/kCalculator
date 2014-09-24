@@ -10,6 +10,7 @@ class Conversion implements app.IConversion {
 
   // Forgot that height has both feet and inches -_-
   // Let's use only inches for now
+  // TODO: fixme
   inchesToCm(height: number): number {
     return Math.round(height / 0.393700787 * 100) / 100;
   }

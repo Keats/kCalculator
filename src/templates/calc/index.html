@@ -1,29 +1,32 @@
 <form>
     <!-- This HTML is horrible, sorry -->
     I am a
-    <select required ng-model="vm.infoData.activityMultiplier">
+    <select required ng-model="vm.infoData.activityMultiplier" ng-change="vm.calculateTDEE()">
         <option value="1.2">Sedentary</option>
         <option value="1.375">Lightly active</option>
         <option value="1.55">Moderately active</option>
         <option value="1.725">Very active</option>
         <option value="1.9">Extra active</option>
     </select>
-    <input required min="0" max="150" type="number" ng-model="vm.infoData.age" /> years old
-    <select required ng-model="vm.infoData.gender">
+    <input required min="0" max="150" type="number" ng-model="vm.infoData.age" ng-change="vm.calculateTDEE()" /> years old
+    <select required ng-model="vm.infoData.gender" ng-change="vm.calculateTDEE()">
         <option value="male">man</option>
         <option value="female">woman</option>
     </select>
-    , I weight <input required min="0" max="1000" type="number" ng-model="vm.infoData.weight"/>
+    , I weight <input required min="0" max="1000" type="number" ng-model="vm.infoData.weight" ng-change="vm.calculateTDEE()"/>
     <select required ng-model="vm.infoData.useImperial">
         <option value="false">kg</option>
         <option value="true">lbs</option>
     </select>
     and am
     <div ng-if="vm.infoData.useImperial == 'false' || !vm.infoData.useImperial">
-        <input required min="0" max="300" type="number" ng-model="vm.infoData.height"/>cm tall.
+        <input required min="0" max="300" type="number" ng-model="vm.infoData.height" ng-change="vm.calculateTDEE()"/>cm tall.
     </div>
     <div ng-if="vm.infoData.useImperial == 'true' || vm.infoData.useImperial === true">
-        <input required type="text" ng-model="vm.infoData.height" ng-pattern="vm.imperialHeightPattern"/> tall.
+        <input required type="text" ng-model="vm.infoData.height" ng-pattern="vm.imperialHeightPattern" ng-change="vm.calculateTDEE()"/> tall.
     </div>
     <!-- End of terrible HTML -->
 </form>
+
+<highchart id="chart1" config="vm.restPieConfig"></highchart>
+<highchart id="chart2" config="vm.workoutPieConfig"></highchart>

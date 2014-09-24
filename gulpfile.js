@@ -34,6 +34,8 @@ var vendoredLibs = [
     'vendor/angular.js',
     'vendor/ui-router.js',
     'vendor/lodash.js',
+    'vendor/highcharts.js',
+    'vendor/highcharts-ng.js',
 ];
 
 var injectLibsPaths = [];

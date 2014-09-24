@@ -7,13 +7,13 @@ function appConfig(
   $locationProvider: ng.ILocationProvider
 ) {
   $urlRouterProvider.otherwise("/");
-  $locationProvider.html5Mode(true);
 }
 
 angular
   .module("kcalc", [
     "templates",
     "kcalc.calc",
+    "highcharts-ng",
     "ui.router.state"
   ])
   .config(appConfig);
