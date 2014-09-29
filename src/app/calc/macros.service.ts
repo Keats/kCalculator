@@ -1,53 +1,99 @@
 /// <reference path="../../types/types.ts"/>
 
 
-class Macros {
+class Macros implements app.IMacros {
+
   private caloriesInMacro = {
     proteins: 4,
     carbs: 4,
     fat: 9
   };
 
-  // Calculates macros split for
-  private getTotalCalories(tdee, dietModifiers) {
-    return {
-      rest: Math.round(tdee + tdee * (dietModifiers.rest / 100)),
-      workout: Math.round(tdee + tdee * (dietModifiers.workout / 100))
-    };
+  // Avoid rewriting the math everytime
+  private getMacroAmount(calories: number, modifier: number, macro: string): number {
+    return Math.round((modifier / 100) * calories / this.caloriesInMacro[macro]);
   }
 
-  private getDailyMacros(totalCalories, weight, macrosModifiers) {
-    var proteinsRest = (macrosModifiers.rest.proteins / 100) * totalCalories.rest / this.caloriesInMacro.proteins;
-    var proteinsWorkout = (macrosModifiers.workout.proteins / 100) * totalCalories.workout / this.caloriesInMacro.proteins;
+  private getMacroPercent(calories: number, amount: number, macro: string): number {
+    return Math.round(((amount * this.caloriesInMacro[macro]) / calories) * 100);
+  }
 
-    var restCalories = Math.round(totalCalories.rest - proteinsRest * this.caloriesInMacro.proteins);
-    var workoutCalories = Math.round(totalCalories.workout - proteinsWorkout * this.caloriesInMacro.proteins);
+  // Defaults to 1g / lbs of body weight
+  private getBasicProteinsAmount(weight: number, useImperial: any): number {
+    var proteins = weight;
+    if (!useImperial) {
+      proteins = Math.round(weight * 2.2);
+    }
+    return proteins;
+  }
 
-    return {
+  // Calculate the initial calories percentage
+  // Use 1g / lbs for the proteins and fills the rest with carbs/fat
+  getBasicMacrosPercentage(totalCalories, weight, useImperial) {
+    var proteins = this.getBasicProteinsAmount(weight, useImperial);
+
+    var result = {
       rest: {
-        carbs: Math.round((macrosModifiers.rest.carbs / 100) * restCalories / this.caloriesInMacro.carbs),
-        fat: Math.round((macrosModifiers.rest.fat / 100) * restCalories / this.caloriesInMacro.fat),
-        proteins: Math.round(proteinsRest)
+        proteins: 0,
+        carbs: 0,
+        fat: 0
       },
       workout: {
-        carbs: Math.round((macrosModifiers.workout.carbs / 100) * workoutCalories / this.caloriesInMacro.carbs),
-        fat: Math.round((macrosModifiers.workout.fat / 100) * workoutCalories / this.caloriesInMacro.fat),
-        proteins: Math.round(proteinsWorkout)
+        proteins: 0,
+        carbs: 0,
+        fat: 0
       }
     };
+
+    var days = ["rest", "workout"];
+    for (var i = 0, len = days.length; i < len; i++) {
+      var dayType = days[i];
+      var proteinsPercent = this.getMacroPercent(totalCalories[dayType], proteins, "proteins");
+      var carbsPercent = Math.round((100 - proteinsPercent) / 2);
+      // Fill the rest with fat, like in real life
+      var fatPercent = 100 - (proteinsPercent + carbsPercent);
+      result[dayType] = {
+        proteins: proteinsPercent,
+        carbs: carbsPercent,
+        fat: fatPercent
+      };
+    }
+
+    return result;
   }
 
-  // dietModifiers: {rest, workout}
-  // macrosModfiers {rest: {proteins, carbs, fat}, workout:{proteins, carbs, fat}}
-  calculate(tdee, dietModifiers, macrosModifiers, info) {
-    // TODO: handle imperial units
-    var calories = this.getTotalCalories(tdee, dietModifiers);
-    var macros = this.getDailyMacros(calories, info.weight, macrosModifiers);
 
-    return {
-      calories: calories,
-      macros: macros
+  // Calculates macro grams
+  getValues(totalCalories, macrosPercentages) {
+    var macros = {
+      rest: {
+        proteins: 0,
+        carbs: 0,
+        fat: 0
+      },
+      workout: {
+        proteins: 0,
+        carbs: 0,
+        fat: 0
+      }
     };
+
+    var days = ["rest", "workout"];
+    for (var i = 0, len = days.length; i < len; i++) {
+      var dayType = days[i];
+      macros[dayType] = {
+        proteins: this.getMacroAmount(
+          totalCalories[dayType], macrosPercentages[dayType].proteins, "proteins"
+        ),
+        carbs: this.getMacroAmount(
+          totalCalories[dayType], macrosPercentages[dayType].carbs, "carbs"
+        ),
+        fat: this.getMacroAmount(
+          totalCalories[dayType], macrosPercentages[dayType].fat, "fat"
+        )
+      };
+    }
+    return macros;
   }
 
 }

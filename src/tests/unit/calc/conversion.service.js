@@ -11,8 +11,14 @@ describe('Unit: Conversion service', function () {
     expect(weightInKg).to.equal(0.45);
   });
 
-  it('should convert from inches to cm', function () {
-    var inchInCm = conversionService.inchesToCm(1);
-    expect(inchInCm).to.equal(2.54);
+  it('should convert from inches to cm in format 5\'10', function () {
+    var heightInRealUnits = conversionService.heightToCm("5'10");
+    expect(heightInRealUnits).to.equal(178);
   });
+
+  it('should convert from inches to cm in format 5\'', function () {
+    var heightInRealUnits = conversionService.heightToCm("5'");
+    expect(heightInRealUnits).to.equal(152);
+  });
+
 });

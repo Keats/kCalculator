@@ -14,19 +14,40 @@
         <option value="female">woman</option>
     </select>
     , I weight <input required min="0" max="1000" type="number" ng-model="vm.infoData.weight" ng-change="vm.calculateTDEE()"/>
-    <select required ng-model="vm.infoData.useImperial">
+    <select required ng-model="vm.infoData.useImperial" ng-change="vm.toggleUnits()">
         <option value="false">kg</option>
         <option value="true">lbs</option>
     </select>
     and am
-    <div ng-if="vm.infoData.useImperial == 'false' || !vm.infoData.useImperial">
+    <div class="height" ng-if="!vm.infoData.useImperial">
         <input required min="0" max="300" type="number" ng-model="vm.infoData.height" ng-change="vm.calculateTDEE()"/>cm tall.
     </div>
-    <div ng-if="vm.infoData.useImperial == 'true' || vm.infoData.useImperial === true">
+    <div class="height" ng-if="vm.infoData.useImperial">
         <input required type="text" ng-model="vm.infoData.height" ng-pattern="vm.imperialHeightPattern" ng-change="vm.calculateTDEE()"/> tall.
     </div>
     <!-- End of terrible HTML -->
 </form>
 
-<highchart id="chart1" config="vm.restPieConfig"></highchart>
-<highchart id="chart2" config="vm.workoutPieConfig"></highchart>
+<div class="charts">
+    <div class="chart">
+        <highchart id="chart-rest" config="vm.restPieConfig"></highchart>
+        <div class="macros">
+            Proteins <input type="range" min="0" max="100" />
+            <br/>
+            Carbs <input type="range" min="0" max="100" />
+            <br/>
+            Fat <input type="range" min="0" max="100" />
+        </div>
+
+    </div>
+    <div class="chart">
+        <highchart id="chart-workout" config="vm.workoutPieConfig"></highchart>
+        <div class="macros">
+            Proteins: <input type="range" min="0" max="100" />
+            <br/>
+            Carbs: <input type="range" min="0" max="100" />
+            <br/>
+            Fat: <input type="range" min="0" max="100" />
+        </div>
+    </div>
+</div>

@@ -4,14 +4,14 @@
 class CalcController {
   infoData: app.IInfoData;
   imperialHeightPattern: RegExp;
+  tdee: number;
+  totalCalories: app.ITotalCalories;
+  macrosPercentages: app.IMacroValues;
+  dietModifiers: app.IDietModifiers;
+
+  // Charts stuff, we don't care about those type really
   restPieConfig: any;
   workoutPieConfig: any;
-  tdee: number;
-
-  // TODO: TO TYPE
-  dietModifiers: any;
-  macrosModifiers: any;
-
 
   /* @ngInject */
   constructor(private Info: app.IInfo, private Macros) {
@@ -33,20 +33,14 @@ class CalcController {
       workout: 30
     };
 
-    this.macrosModifiers = {
-      rest: {
-        proteins: 30,
-        carbs: 20,
-        fat: 50
-      },
-      workout: {
-        proteins: 30,
-        carbs: 50,
-        fat: 20
-      }
-    };
-
     // Manually calls thing for the first load
+    this.tdee = this.Info.calculateTDEE(this.infoData);
+    this.totalCalories = this.Info.getTotalCalories(this.tdee, this.dietModifiers);
+    this.macrosPercentages = this.Macros.getBasicMacrosPercentage(
+      this.totalCalories, this.infoData.weight, this.infoData.useImperial
+    );
+
+    // Get reaaady
     this.initCharts();
     this.calculateTDEE();
   }
@@ -55,13 +49,15 @@ class CalcController {
     return {
       options: {
         chart: {
-          type: "pie"
+          type: "pie",
+          marginRight: 50
         },
         tooltip: {
           pointFormat: "<b>{point.y}g ({point.percentage:.1f}%)</b>"
         },
         plotOptions: {
           pie: {
+            size: "100%",
             animation: false,
             dataLabels: {
               enabled: true,
@@ -86,24 +82,39 @@ class CalcController {
     this.workoutPieConfig = this.getPieChartConfig("Workout Day");
   }
 
+  // Give some default values when switching units and recalculate TDEE
+  toggleUnits() {
+    this.infoData.useImperial = this.infoData.useImperial === "true";
+    if (this.infoData.useImperial) {
+      this.infoData.weight = Math.round(this.infoData.weight * 2.2);
+      this.infoData.height = "5'10";
+    } else {
+      this.infoData.weight = Math.round(this.infoData.weight / 2.2);
+      this.infoData.height = 178;
+    }
+    this.calculateTDEE();
+  }
+
   calculateTDEE() {
     this.tdee = this.Info.calculateTDEE(this.infoData);
-    var data = this.Macros.calculate(this.tdee, this.dietModifiers, this.macrosModifiers, this.infoData);
+    this.totalCalories = this.Info.getTotalCalories(this.tdee, this.dietModifiers);
+    var data = this.Macros.getValues(this.totalCalories, this.macrosPercentages);
 
     this.restPieConfig.series = [{
-      name: 'Daily macros %',
+      name: "Daily macros %",
       data: [
-        ['Proteins', data.macros.rest.proteins],
-        ['Carbs', data.macros.rest.carbs],
-        ['Fat', data.macros.rest.fat],
+        ["Proteins", data.rest.proteins],
+        ["Carbs", data.rest.carbs],
+        ["Fat", data.rest.fat],
       ]
     }];
+
     this.workoutPieConfig.series = [{
-      name: 'Daily macros %',
+      name: "Daily macros %",
       data: [
-        ['Proteins', data.macros.workout.proteins],
-        ['Carbs', data.macros.workout.carbs],
-        ['Fat', data.macros.workout.fat],
+        ["Proteins", data.workout.proteins],
+        ["Carbs", data.workout.carbs],
+        ["Fat", data.workout.fat],
       ]
     }];
   }
