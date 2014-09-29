@@ -1,4 +1,5 @@
-[![Build Status](https://drone.io/github.com/Keats/kCalculator/status.png)](https://drone.io/github.com/Keats/kCalculator/latest)
+[![Build Status](https://travis-ci.org/Keats/kCalculator.png?branch=master)](https://travis-ci.org/Keats/kCalculator)
+[![devDependency Status](https://david-dm.org/Keats/kCalculator/dev-status.svg)](https://david-dm.org/Keats/kCalculator#info=devDependencies)
 # Leangains calories calculator
 Simple tool to calculate calories and macro needed on rest and workout days depending on some choices:
   - calories cycle percentage
