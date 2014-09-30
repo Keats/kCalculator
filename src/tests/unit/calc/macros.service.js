@@ -62,7 +62,7 @@ describe('Unit: Macros service', function () {
       }
     };
     var macros = macrosService.getValues(totalCalories, macrosPercentages);
-    console.log(macros);
+
     // 4 cals in 1g of proteins
     expect(macros.rest.proteins).to.equal(1016 / 4);
     expect(macros.workout.proteins).to.equal(Math.round(1219 / 4));

@@ -62,7 +62,6 @@ class Macros implements app.IMacros {
     return result;
   }
 
-
   // Calculates macro grams
   getValues(totalCalories, macrosPercentages) {
     var macros = {

@@ -98,6 +98,9 @@ class CalcController {
   calculateTDEE() {
     this.tdee = this.Info.calculateTDEE(this.infoData);
     this.totalCalories = this.Info.getTotalCalories(this.tdee, this.dietModifiers);
+    this.macrosPercentages = this.Macros.getBasicMacrosPercentage(
+      this.totalCalories, this.infoData.weight, this.infoData.useImperial
+    );
     var data = this.Macros.getValues(this.totalCalories, this.macrosPercentages);
 
     this.restPieConfig.series = [{
