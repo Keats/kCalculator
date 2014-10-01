@@ -53,7 +53,7 @@ class CalcController {
           marginRight: 50
         },
         tooltip: {
-          pointFormat: "<b>{point.y}g ({point.percentage:.1f}%)</b>"
+          pointFormat: "<b>{point.grams}g ({point.y}%)</b>"
         },
         plotOptions: {
           pie: {
@@ -61,7 +61,7 @@ class CalcController {
             animation: false,
             dataLabels: {
               enabled: true,
-              format: "<b>{point.name}</b>: {point.y}g ({point.percentage:.1f}%)",
+              format: "<b>{point.name}</b>: {point.grams}g ({point.y}%)",
               style: {
                 fontSize: "14px"
               }
@@ -98,28 +98,65 @@ class CalcController {
   calculateTDEE() {
     this.tdee = this.Info.calculateTDEE(this.infoData);
     this.totalCalories = this.Info.getTotalCalories(this.tdee, this.dietModifiers);
+    // separate that in another method
     this.macrosPercentages = this.Macros.getBasicMacrosPercentage(
       this.totalCalories, this.infoData.weight, this.infoData.useImperial
     );
+    this.computeMacros();
+  }
+
+  computeMacros() {
     var data = this.Macros.getValues(this.totalCalories, this.macrosPercentages);
 
     this.restPieConfig.series = [{
       name: "Daily macros %",
       data: [
-        ["Proteins", data.rest.proteins],
-        ["Carbs", data.rest.carbs],
-        ["Fat", data.rest.fat],
+        {name: "Proteins", y: this.macrosPercentages.rest.proteins, grams: data.rest.proteins},
+        {name: "Carbs", y: this.macrosPercentages.rest.carbs, grams: data.rest.carbs},
+        {name: "Fat", y: this.macrosPercentages.rest.fat, grams: data.rest.fat}
       ]
     }];
 
     this.workoutPieConfig.series = [{
       name: "Daily macros %",
       data: [
-        ["Proteins", data.workout.proteins],
-        ["Carbs", data.workout.carbs],
-        ["Fat", data.workout.fat],
+        {name: "Proteins", y: this.macrosPercentages.workout.proteins, grams: data.workout.proteins},
+        {name: "Carbs", y: this.macrosPercentages.workout.carbs, grams: data.workout.carbs},
+        {name: "Fat", y: this.macrosPercentages.workout.fat, grams: data.workout.fat}
       ]
     }];
+  }
+
+  changeMacros(dayType: string, macroName: string) {
+    // Variable is set as a string by the type=range, should probably have a
+    // directive to do it for me
+    this.macrosPercentages[dayType][macroName] = parseInt(this.macrosPercentages[dayType][macroName], 10);
+    // Sum should be 100, get the difference divided by 2 as we'll need to split
+    // the difference across the 2 other macros
+    var difference = (
+      100 - (
+        this.macrosPercentages[dayType].carbs +
+        this.macrosPercentages[dayType].proteins +
+        this.macrosPercentages[dayType].fat
+        )
+      ) / 2;
+
+    var additionalDifference = 0;
+
+    for (var macro in this.macrosPercentages[dayType]) {
+      if (macro === macroName) {
+        continue;
+      }
+      var macroPercentage = this.macrosPercentages[dayType][macro];
+      if (macroPercentage + difference < 0) {
+        this.macrosPercentages[dayType][macro] = 0;
+        additionalDifference = difference - macroPercentage;
+      } else {
+        this.macrosPercentages[dayType][macro] += difference + additionalDifference;
+      }
+    }
+
+    this.computeMacros();
   }
 }
 

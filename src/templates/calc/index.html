@@ -34,15 +34,15 @@
         <div class="macros">
             <div class="macro-slider">
                 <span>Proteins: {{vm.macrosPercentages.rest.proteins}}%</span>
-                <input type="range" min="0" max="100" ng-model="vm.macrosPercentages.rest.proteins"/>
+                <input type="range" min="0" max="100" ng-model="vm.macrosPercentages.rest.proteins" ng-change="vm.changeMacros('rest', 'proteins')"/>
             </div>
             <div class="macro-slider">
                 <span>Carbs: {{vm.macrosPercentages.rest.carbs}}%</span>
-                <input type="range" min="0" max="100" ng-model="vm.macrosPercentages.rest.carbs"/>
+                <input type="range" min="0" max="100" ng-model="vm.macrosPercentages.rest.carbs" ng-change="vm.changeMacros('rest', 'carbs')"/>
             </div>
             <div class="macro-slider">
                 <span>Fat: {{vm.macrosPercentages.rest.fat}}%</span>
-                <input type="range" min="0" max="100" ng-model="vm.macrosPercentages.rest.fat"/>
+                <input type="range" min="0" max="100" ng-model="vm.macrosPercentages.rest.fat" ng-change="vm.changeMacros('rest', 'fat')"/>
             </div>
         </div>
 
@@ -52,15 +52,15 @@
         <div class="macros">
             <div class="macro-slider">
                 <span>Proteins: {{vm.macrosPercentages.workout.proteins}}%</span>
-                <input type="range" min="0" max="100" ng-model="vm.macrosPercentages.workout.proteins"/>
+                <input type="range" min="0" max="100" ng-model="vm.macrosPercentages.workout.proteins" ng-change="vm.changeMacros('workout', 'proteins')"/>
             </div>
             <div class="macro-slider">
                 <span>Carbs: {{vm.macrosPercentages.workout.carbs}}%</span>
-                <input type="range" min="0" max="100" ng-model="vm.macrosPercentages.workout.carbs"/>
+                <input type="range" min="0" max="100" ng-model="vm.macrosPercentages.workout.carbs" ng-change="vm.changeMacros('workout', 'carbs')"/>
             </div>
             <div class="macro-slider">
                 <span>Fat: {{vm.macrosPercentages.workout.fat}}%</span>
-                <input type="range" min="0" max="100" ng-model="vm.macrosPercentages.workout.fat"/>
+                <input type="range" min="0" max="100" ng-model="vm.macrosPercentages.workout.fat" ng-change="vm.changeMacros('workout', 'fat')"/>
             </div>
         </div>
     </div>
