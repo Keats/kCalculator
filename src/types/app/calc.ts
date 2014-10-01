@@ -46,14 +46,10 @@ declare module app {
     workout: IDayValues;
   }
 
-  interface IMacroModifiers {
-    rest: IDayValues;
-    workout: IDayValues;
-  }
-
   interface IMacros {
     getBasicMacrosPercentage(totalCalories: ITotalCalories, weight: number, useImperial: any): IMacroValues;
-    getValues(totalCalories: ITotalCalories, macrosModifier: IMacroValues);
+    getValues(totalCalories: ITotalCalories, macrosModifier: IMacroValues): IMacroValues;
+    getTotalDailyCalories(macroValues: IDayValues): number;
   }
 }
 

@@ -7,6 +7,7 @@ class CalcController {
   tdee: number;
   totalCalories: app.ITotalCalories;
   macrosPercentages: app.IMacroValues;
+  macrosValues: app.IMacroValues;
   dietModifiers: app.IDietModifiers;
 
   // Charts stuff, we don't care about those type really
@@ -84,6 +85,7 @@ class CalcController {
 
   // Give some default values when switching units and recalculate TDEE
   toggleUnits() {
+    // TODO: use a directive for that
     this.infoData.useImperial = this.infoData.useImperial === "true";
     if (this.infoData.useImperial) {
       this.infoData.weight = Math.round(this.infoData.weight * 2.2);
@@ -106,23 +108,23 @@ class CalcController {
   }
 
   computeMacros() {
-    var data = this.Macros.getValues(this.totalCalories, this.macrosPercentages);
+    this.macrosValues = this.Macros.getValues(this.totalCalories, this.macrosPercentages);
 
     this.restPieConfig.series = [{
       name: "Daily macros %",
       data: [
-        {name: "Proteins", y: this.macrosPercentages.rest.proteins, grams: data.rest.proteins},
-        {name: "Carbs", y: this.macrosPercentages.rest.carbs, grams: data.rest.carbs},
-        {name: "Fat", y: this.macrosPercentages.rest.fat, grams: data.rest.fat}
+        {name: "Proteins", y: this.macrosPercentages.rest.proteins, grams: this.macrosValues .rest.proteins},
+        {name: "Carbs", y: this.macrosPercentages.rest.carbs, grams: this.macrosValues .rest.carbs},
+        {name: "Fat", y: this.macrosPercentages.rest.fat, grams: this.macrosValues .rest.fat}
       ]
     }];
 
     this.workoutPieConfig.series = [{
       name: "Daily macros %",
       data: [
-        {name: "Proteins", y: this.macrosPercentages.workout.proteins, grams: data.workout.proteins},
-        {name: "Carbs", y: this.macrosPercentages.workout.carbs, grams: data.workout.carbs},
-        {name: "Fat", y: this.macrosPercentages.workout.fat, grams: data.workout.fat}
+        {name: "Proteins", y: this.macrosPercentages.workout.proteins, grams: this.macrosValues .workout.proteins},
+        {name: "Carbs", y: this.macrosPercentages.workout.carbs, grams: this.macrosValues .workout.carbs},
+        {name: "Fat", y: this.macrosPercentages.workout.fat, grams: this.macrosValues .workout.fat}
       ]
     }];
   }
@@ -157,6 +159,10 @@ class CalcController {
     }
 
     this.computeMacros();
+  }
+
+  getDailyCalories(dayType: string){
+    return this.Macros.getDailyCalories(this.macrosValues[dayType]);
   }
 }
 

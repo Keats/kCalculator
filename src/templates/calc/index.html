@@ -25,12 +25,18 @@
     <div class="height" ng-if="vm.infoData.useImperial">
         <input required type="text" ng-model="vm.infoData.height" ng-pattern="vm.imperialHeightPattern" ng-change="vm.calculateTDEE()"/> tall.
     </div>
+     My TDEE is <span class="calorie-number">{{ vm.tdee }}</span> kcal.
     <!-- End of terrible HTML -->
 </form>
 
 <div class="charts">
     <div class="chart">
         <highchart id="chart-rest" config="vm.restPieConfig"></highchart>
+        <div class="tdee-modifier">
+            <input type="number" required min="-50" max="50" ng-model="vm.dietModifiers.rest" ng-change="vm.calculateTDEE()"/>
+            % <span ng-if="vm.dietModifiers.rest <= 0">below</span>
+            <span ng-if="vm.dietModifiers.rest > 0">over</span> TDEE : <span class="calorie-number">{{ vm.getDailyCalories('rest') }}</span> kcal
+        </div>
         <div class="macros">
             <div class="macro-slider">
                 <span>Proteins: {{vm.macrosPercentages.rest.proteins}}%</span>
@@ -49,6 +55,11 @@
     </div>
     <div class="chart">
         <highchart id="chart-workout" config="vm.workoutPieConfig"></highchart>
+        <div class="tdee-modifier">
+            <input type="number" required min="-50" max="50" ng-model="vm.dietModifiers.workout" ng-change="vm.calculateTDEE()"/>
+            % <span ng-if="vm.dietModifiers.rest <= 0">below</span>
+            <span ng-if="vm.dietModifiers.rest > 0">over</span> TDEE : <span class="calorie-number">{{ vm.getDailyCalories('workout') }}</span> kcal
+        </div>
         <div class="macros">
             <div class="macro-slider">
                 <span>Proteins: {{vm.macrosPercentages.workout.proteins}}%</span>

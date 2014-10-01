@@ -95,6 +95,12 @@ class Macros implements app.IMacros {
     return macros;
   }
 
+  getDailyCalories(macros) {
+    return Math.round(macros.carbs * this.caloriesInMacro.carbs +
+      macros.fat * this.caloriesInMacro.fat +
+      macros.proteins * this.caloriesInMacro.proteins);
+  }
+
 }
 
 angular
