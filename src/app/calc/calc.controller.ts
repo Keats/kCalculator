@@ -161,7 +161,7 @@ class CalcController {
     this.computeMacros();
   }
 
-  getDailyCalories(dayType: string){
+  getDailyCalories(dayType: string) {
     return this.Macros.getDailyCalories(this.macrosValues[dayType]);
   }
 }

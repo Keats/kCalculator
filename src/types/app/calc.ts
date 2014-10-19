@@ -49,7 +49,7 @@ declare module app {
   interface IMacros {
     getBasicMacrosPercentage(totalCalories: ITotalCalories, weight: number, useImperial: any): IMacroValues;
     getValues(totalCalories: ITotalCalories, macrosModifier: IMacroValues): IMacroValues;
-    getTotalDailyCalories(macroValues: IDayValues): number;
+    getDailyCalories(macroValues: IDayValues): number;
   }
 }
 
